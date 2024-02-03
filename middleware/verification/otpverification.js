@@ -10,18 +10,19 @@ const client = require('twilio')(accountSid, authToken);
  * @param {Object} res - The response object.
  * @param {Function} next - The next middleware function.
  */
-function SendOtp(req, res, next) {
+async function SendOtp(req, res, next) {
+  const phoneNumber = req.body.mobileNumber;
   try {
-    const phoneNumber = req.body.mobileNumber;
-    client.verify.v2.services('VA82c5e015c5365be58bf816e70c4d6f19')
+    await client.verify.v2.services(process.env.SERVICE_ID)
         .verifications
-        .create({to: `+91${phoneNumber}`, channel: 'sms'})
-        .then((verification) => console.log(verification.status));
-    // console.log('from middleware', req.mobileNumber);
-
-    next();
-  } catch (err) {
-    console.log('otp sending error', err);
+        .create({to: `+91${phoneNumber}`, channel: 'sms'});
+    res.json({message: 'OTP send succesfully'});
+  } catch (error) {
+    res.status(500).json({error: 'failed to sent otp'});
   }
 }
+
+
 module.exports = SendOtp;
+
+
