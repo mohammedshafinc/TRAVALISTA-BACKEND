@@ -11,6 +11,7 @@ const client = require('twilio')(accountSid, authToken);
  * @param {Function} next - The next middleware function.
  */
 async function SendOtp(req, res, next) {
+  console.log('sunnni');
   const phoneNumber = req.body.mobileNumber;
   try {
     await client.verify.v2.services(process.env.SERVICE_ID)

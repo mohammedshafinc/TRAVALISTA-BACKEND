@@ -5,6 +5,7 @@ const client = require('twilio')(accountSid, authToken);
 
 // eslint-disable-next-line require-jsdoc
 async function verityOtp(req, res, next) {
+  console.log('suuuiiiiii');
   const phoneNumber = req.body.mobileNumber;
   const otp = req.body.otp;
   try {

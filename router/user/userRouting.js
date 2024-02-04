@@ -8,9 +8,10 @@ const router = express.Router();
 const {postSignup, postVerifyOtp} = require('../../controller/userController/signupcontroller');
 const SendOtp = require('../../middleware/verification/otpverification');
 const verityOtp = require('../../middleware/verification/verifyotp');
+const validation = require('../../middleware/validation/signupvalidation');
 
 
-router.post('/usersignup', SendOtp, postSignup);
+router.post('/usersignup', validation, SendOtp, postSignup);
 router.post('/verifyotp', verityOtp, postVerifyOtp);
 
 module.exports = router;
