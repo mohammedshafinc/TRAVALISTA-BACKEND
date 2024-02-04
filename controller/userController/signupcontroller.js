@@ -5,4 +5,7 @@ module.exports = {
   postSignup: (req, res)=>{
     console.log(req.body);
   },
+  postVerifyOtp: (req, res)=>{
+    console.log(req.body);
+  },
 };

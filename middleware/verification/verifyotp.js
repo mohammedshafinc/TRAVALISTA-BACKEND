@@ -5,11 +5,12 @@ const client = require('twilio')(accountSid, authToken);
 
 // eslint-disable-next-line require-jsdoc
 async function verityOtp(req, res, next) {
-  const phoneNumber = req.body.phoneNumber;
+  const phoneNumber = req.body.mobileNumber;
+  const otp = req.body.otp;
   try {
-    client.verify.v2.services('VAXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+    client.verify.v2.services(process.env.SERVICE_ID)
         .verificationChecks
-        .create({to: `+91${phoneNumber}`, code: '123456'})
+        .create({to: `+91${phoneNumber}`, code: `${otp}`})
         .then((verificationCheck) => console.log(verificationCheck.status));
     next();
   } catch (error) {
