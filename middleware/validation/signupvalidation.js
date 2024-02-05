@@ -21,11 +21,11 @@ function validation(req, res, next) {
 
   try {
     if (!eCheck) {
-      res.status(400).json({message: 'error in email check'});
-    } else if (!pCheck) {
-      res.status(400).json({message: 'error in password check'});
+      res.status(400).json({message: 'Email not correct format'});
     } else if (!mCheck) {
-      res.status(400).json({message: 'mobile number checking error'});
+      res.status(400).json({message: 'please enter mobile number correctly'});
+    } else if (!pCheck) {
+      res.status(400).json({message: 'password not in correct format'});
     } else if (!bool) {
       res.status(400).json({message: 'password and confirm password not matc'});
     } else {
