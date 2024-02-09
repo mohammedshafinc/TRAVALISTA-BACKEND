@@ -6,11 +6,36 @@ const jwt = require('jsonwebtoken');
 
 
 module.exports = {
-  getsignup: ()=>{
+  getsignup: (req, res)=>{
     console.log('hello');
   },
-  postSignup: (req, res)=>{
-    console.log(req.body);
+  postSignup: async (req, res, next)=>{
+    const {email, mobileNumber} = req.body;
+    try {
+      const emailExist = await User.findOne({
+        email: email,
+      });
+      const numberExist = await User.findOne({
+        mobile: mobileNumber,
+      });
+      console.log(mobileNumber);
+
+      if (emailExist) {
+        console.log('email exist or number');
+        return res.status(409).json({
+          message: `user with this ${email} already exist`,
+        });
+      }
+      if (numberExist) {
+        console.log('email exist or number');
+        return res.status(409).json({
+          message: `mobile number ${mobileNumber} already exist`,
+        });
+      }
+      next();
+    } catch (error) {
+      console.log('error finding user', error);
+    }
   },
   postVerifyOtp: async (req, res)=>{
     console.log('molil', req.body);
@@ -23,6 +48,7 @@ module.exports = {
         mobile: mobileNumber,
         password,
       });
+
       await newUser.save();
       const token = jwt.sign({id: newUser._id}, process.env.SECRET_STR,
           {expiresIn: process.env.LOGIN_EXPIRES});

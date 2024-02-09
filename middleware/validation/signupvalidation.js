@@ -2,7 +2,7 @@
 
 /* eslint-disable require-jsdoc */
 function validation(req, res, next) {
-  const {email, mobileNumber, password, confirmPassword} = req.body;
+  const {email, mobileNumber, password, confirmPassword, fullName} = req.body;
   console.log('signup', req.body);
   const ePattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   const eCheck = ePattern.test(email);
@@ -20,6 +20,11 @@ function validation(req, res, next) {
 
 
   try {
+    if (!fullName && !email &&!mobileNumber && !password) {
+      return res.status(400).json({
+        message: 'Please fill all forms',
+      });
+    }
     if (!eCheck) {
       res.status(400).json({message: 'Email not correct format'});
     } else if (!mCheck) {
@@ -27,7 +32,8 @@ function validation(req, res, next) {
     } else if (!pCheck) {
       res.status(400).json({message: 'password not in correct format'});
     } else if (!bool) {
-      res.status(400).json({message: 'password and confirm password not matc'});
+      res.status(400).json({
+        message: 'password and confirm password not match'});
     } else {
       console.log('deeeereeeeeeee');
       next();

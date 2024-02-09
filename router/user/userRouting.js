@@ -6,12 +6,12 @@ const router = express.Router();
 
 // eslint-disable-next-line max-len
 const {postSignup, postVerifyOtp, postLogin} = require('../../controller/userController/signupcontroller');
-const SendOtp = require('../../middleware/verification/otpverification');
+const SendOtp = require('../../middleware/verification/sendotp');
 const verityOtp = require('../../middleware/verification/verifyotp');
 const validation = require('../../middleware/validation/signupvalidation');
 
 
-router.post('/usersignup', validation, SendOtp, postSignup);
+router.post('/usersignup', validation, postSignup, SendOtp);
 router.post('/verifyotp', verityOtp, postVerifyOtp);
 router.post('/userlogin', postLogin);
 
