@@ -1,6 +1,8 @@
 
+require('dotenv').config();
 const User = require('../../models/userregistration');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
 module.exports = {
@@ -22,8 +24,18 @@ module.exports = {
         password,
       });
       await newUser.save();
+      const token = jwt.sign({id: newUser._id}, process.env.SECRET_STR,
+          {expiresIn: process.env.LOGIN_EXPIRES});
+      console.log(token);
       console.log(newUser);
       console.log('user added succesfully');
+      res.status(201).json({
+        status: 'success',
+        token,
+        data: {
+          user: newUser,
+        },
+      });
     } catch (err) {
       console.log('error adding user', err);
     }
