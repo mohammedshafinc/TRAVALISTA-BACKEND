@@ -68,7 +68,9 @@ module.exports = {
   },
 
   postLogin: async (req, res) => {
-    const {email, password} = req.body;
+    const {fullName, email, mobileNumber, password} = req.body;
+    const data = {email, password, fullName, mobileNumber};
+    console.log( 'data', data);
     try {
       const existinguser = await User.findOne({email});
       if (!existinguser) {
@@ -80,11 +82,12 @@ module.exports = {
       if (!passwordMatch) {
         return res.status(401).json({message: 'password not match'});
       }
+      res.status(200).json({message: 'user logged succesfully',
+        user: existinguser});
+      console.log('post login', req.body);
     } catch (error) {
       console.log('error in login', error);
     }
-    res.status(200).json({message: 'user loggd'});
-    console.log('post login', req.body);
   },
 };
 
