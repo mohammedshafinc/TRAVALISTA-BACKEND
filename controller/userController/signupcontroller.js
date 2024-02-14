@@ -4,6 +4,9 @@ const User = require('../../models/userregistration');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const sendOTP = require('../../utility/twilio');
+const verifyOtp = require('../../utility/verifyotp');
+
 
 module.exports = {
   getsignup: (req, res)=>{
@@ -32,40 +35,52 @@ module.exports = {
           message: `mobile number ${mobileNumber} already exist`,
         });
       }
-      next();
+      const status = sendOTP(req.body.mobileNumber);
+      if (status) {
+        res.json({message: 'OTP send succesfully'});
+      } else {
+        res.json({message: 'failed to send Otp'});
+      }
     } catch (error) {
       console.log('error finding user', error);
     }
   },
-  postVerifyOtp: async (req, res)=>{
-    console.log('molil', req.body);
-    try {
-      const {fullName, email, mobileNumber, password} = req.body;
-      console.log('ullil', req.body);
-      const newUser = new User({
-        fullname: fullName,
-        email,
-        mobile: mobileNumber,
-        password,
-      });
-
-      await newUser.save();
-      const token = jwt.sign({id: newUser._id}, process.env.SECRET_STR,
-          {expiresIn: process.env.LOGIN_EXPIRES});
-      console.log(token);
-      console.log(newUser);
-      console.log('user added succesfully');
-      res.status(201).json({
-        status: 'success',
-        token,
-        data: {
-          user: newUser,
-        },
-      });
-    } catch (err) {
-      console.log('error adding user', err);
+  postVerifyOtp: async (req, res) => {
+    const verify = verifyOtp(req.body.mobileNumber, req.body.otp);
+    if (verify) {
+      console.log('otp verified');
+      try {
+        const {fullName, email, mobileNumber, password} = req.body;
+        const newUser = new User({
+          fullname: fullName,
+          email,
+          mobile: mobileNumber,
+          password,
+        });
+        await newUser.save();
+        const token = jwt.sign({id: newUser._id},
+            process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
+        console.log(token);
+        console.log(newUser);
+        console.log('user added successfully');
+        // Send response after user registration
+        return res.status(201).json({
+          status: 'success',
+          token,
+          newUser,
+        });
+      } catch (err) {
+        console.log('error adding user', err);
+        // Handle error adding user
+        return res.status(500).json({error: 'Error adding user'});
+      }
+    } else {
+      console.log('failed to verify otp');
+      // Send response for failed OTP verification
+      return res.status(400).json({message: 'Failed to verify OTP'});
     }
   },
+
 
   postLogin: async (req, res) => {
     const {fullName, email, mobileNumber, password} = req.body;
@@ -89,6 +104,7 @@ module.exports = {
       console.log('error in login', error);
     }
   },
+
 };
 
 
