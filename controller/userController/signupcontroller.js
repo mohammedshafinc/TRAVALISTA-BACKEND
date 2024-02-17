@@ -3,6 +3,7 @@ require('dotenv').config();
 const User = require('../../models/userregistration');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+// const Mongoose = require('mongoose');
 
 const sendOTP = require('../../utility/twilio');
 const verifyOtp = require('../../utility/verifyotp');
@@ -61,13 +62,14 @@ module.exports = {
         const token = jwt.sign({id: newUser._id},
             process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
         console.log(token);
-        console.log(newUser);
         console.log('user added successfully');
         // Send response after user registration
+        console.log('pundachi thalla');
+        console.log(newUser);
         return res.status(201).json({
           status: 'success',
           token,
-          newUser,
+          user: newUser,
         });
       } catch (err) {
         console.log('error adding user', err);
@@ -83,9 +85,9 @@ module.exports = {
 
 
   postLogin: async (req, res) => {
-    const {fullName, email, mobileNumber, password} = req.body;
-    const data = {email, password, fullName, mobileNumber};
-    console.log( 'data', data);
+    const {email, password} = req.body;
+    // const data = {email, password};
+    // console.log( 'logged data', data);
     try {
       const existinguser = await User.findOne({email});
       if (!existinguser) {
@@ -97,11 +99,31 @@ module.exports = {
       if (!passwordMatch) {
         return res.status(401).json({message: 'password not match'});
       }
+      const token = jwt.sign({id: existinguser._id},
+          process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
       res.status(200).json({message: 'user logged succesfully',
-        user: existinguser});
-      console.log('post login', req.body);
+        user: existinguser, token, login: true});
+      console.log('pundachi');
+      console.log(existinguser);
+      // console.log('post login', req.body);
     } catch (error) {
       console.log('error in login', error);
+    }
+  },
+
+  getProfile: async (req, res)=>{
+    try {
+      console.log('tokenid', req.token.id);
+      const id = req.token.id;
+      console.log('id', id);
+      const user = await User.findById(id);
+
+      if (!user) {
+        return res.status(404).json(({message: 'no user'}));
+      }
+      res.json(user);
+    } catch (err) {
+      console.log('error getting profile', err);
     }
   },
 
