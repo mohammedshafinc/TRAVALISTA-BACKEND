@@ -1,19 +1,19 @@
 
 require('dotenv').config();
-const User = require('../../models/userregistration');
+const User = require('../models/userregistration');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 // const Mongoose = require('mongoose');
 
-const sendOTP = require('../../utility/twilio');
-const verifyOtp = require('../../utility/verifyotp');
+const sendOTP = require('../utility/twilio');
+const verifyOtp = require('../utility/verifyotp');
 
 
 module.exports = {
   getsignup: (req, res)=>{
     console.log('hello');
   },
-  postSignup: async (req, res, next)=>{
+  postSignup: async (req, res)=>{
     const {email, mobileNumber} = req.body;
     try {
       const emailExist = await User.findOne({
@@ -64,7 +64,6 @@ module.exports = {
         console.log(token);
         console.log('user added successfully');
         // Send response after user registration
-        console.log('pundachi thalla');
         console.log(newUser);
         return res.status(201).json({
           status: 'success',
@@ -103,8 +102,8 @@ module.exports = {
           process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
       res.status(200).json({message: 'user logged succesfully',
         user: existinguser, token, login: true});
-      console.log('pundachi');
-      console.log(existinguser);
+      // console.log('pundachi');
+      console.log('exist', existinguser);
       // console.log('post login', req.body);
     } catch (error) {
       console.log('error in login', error);

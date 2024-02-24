@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 function connectDb() {
-  mongoose.connect(process.env.MONGO_URL, {
+  return mongoose.connect(process.env.MONGO_URL, {
     dbName: 'Travalista',
   }).then(()=>{
     console.log('connected to mongoDb');

@@ -1,9 +1,11 @@
 const express = require('express');
 const cors =require('cors');
 const bodyParser = require('body-parser');
-const userRouter = require('./router/user/userRouting');
+const userRouter = require('./router/userRouting');
+const guideRouter = require('./router/guideRouting');
+const adminRouter = require('./router/guideRouting');
 const connectDb = require('./config/config');
-connectDb();
+
 
 require('dotenv').config();
 const app = express();
@@ -13,11 +15,16 @@ app.use(bodyParser.json()); // Parse JSON bodies
 app.use(bodyParser.urlencoded({extended: true})); // Parse URL-encoded bodies
 
 const port = process.env.PORT;
-
 app.use('/', userRouter);
+app.use('/guide', guideRouter);
+app.use('/admin', adminRouter);
 
-app.listen(port, ()=>{
-  console.log(`server running on ${port}`);
-});
-
-
+connectDb()
+    .then(() => {
+      app.listen(port, () => {
+        console.log(`Server running on ${port}`);
+      });
+    })
+    .catch((error) => {
+      console.error('Error connecting to MongoDB:', error.message);
+    });
