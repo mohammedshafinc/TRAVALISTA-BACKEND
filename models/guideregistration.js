@@ -1,5 +1,5 @@
 const moongoose = require('mongoose');
-// const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const guideSchema = new moongoose.Schema({
   fullname: {
     type: String,
@@ -8,10 +8,12 @@ const guideSchema = new moongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   phonenumber: {
     type: Number,
     required: true,
+    unique: true,
 
   },
   exp: {
@@ -30,17 +32,21 @@ const guideSchema = new moongoose.Schema({
     type: String,
     required: true,
   },
+  password: {
+    type: String,
+    required: true,
+  },
 });
-// guideSchema.pre('save', async function(next) {
-//   try {
-//     const salt = await bcrypt.genSalt(10);
-//     const hashedPassword = await bcrypt.hash(this.password, salt);
-//     this.password = hashedPassword;
-//     next();
-//   } catch (err) {
-//     next(err);
-//   }
-// });
+guideSchema.pre('save', async function(next) {
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(this.password, salt);
+    this.password = hashedPassword;
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 const Guide = moongoose.model('guideregister', guideSchema);
 module.exports = Guide;

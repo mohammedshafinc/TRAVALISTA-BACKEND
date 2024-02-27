@@ -16,7 +16,6 @@ try {
   });
 
   const upload =
-
 multer({
   storage: multerS3({
     s3: s3Client,
