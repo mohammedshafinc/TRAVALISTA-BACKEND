@@ -20,8 +20,8 @@ async function sendmail(email, otp) {
     html: `your otp for ${email} is ${otp}`, // html body
   };
   try {
-    const info = await transporter.sendMail(message);
-    console.log('message sent:%s ', info.messageId );
+    await transporter.sendMail(message);
+    // console.log('message sent:%s ', info.messageId );
   } catch (err) {
     console.log('err in sendmail', err);
     throw new Error('klkl');

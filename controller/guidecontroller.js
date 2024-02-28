@@ -1,4 +1,4 @@
-// const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 // const jwt = require('jsonwebtoken');
 // const multer = require('multer');
 
@@ -62,6 +62,28 @@ module.exports = {
       });
     } else {
       res.status(400).json({message: 'no file uploaded'});
+    }
+  },
+  postguidelogin: async (req, res) => {
+    try {
+      console.log('logged details', req.body);
+      if (!req.body.email || !req.body.password) {
+        return res.status(400)
+            .json({message: 'Please enter your email and password.'});
+      }
+      const {email, password} = req.body;
+      const existGuide = await Guide.findOne({email});
+      if (!existGuide) {
+        res.status(404).json({message: 'guide not found '});
+      }
+      const comparePassword = await
+      bcrypt.compare(password, existGuide.password);
+      if (!comparePassword) {
+        res.status(401).json({message: 'password not match'});
+      }
+      res.status(200).json({message: 'loggeed succesfully'});
+    } catch (error) {
+      console.log('error in guide login', error);
     }
   },
 };
