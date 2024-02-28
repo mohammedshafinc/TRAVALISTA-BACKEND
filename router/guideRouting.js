@@ -3,8 +3,9 @@ const express = require('express');
 const router = express.Router();
 const upload = require('../middleware/multer.js');
 
-const {postGuide} = require('../controller/guidecontroller.js');
+const {postGuide, postOtpVerify} = require('../controller/guidecontroller.js');
 
-router.post('/guideregister', upload.single('files'), postGuide);
+router.post('/guideregister', postGuide);
+router.post('/guideotpverify', upload.single('imgupload'), postOtpVerify);
 
 module.exports = router;
