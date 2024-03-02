@@ -1,13 +1,14 @@
+/* eslint-disable new-cap */
 
 require('dotenv').config();
 const User = require('../models/userregistration');
+const UserUpdates = require('../models/userupdate');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-// const Mongoose = require('mongoose');
+const Mongoose = require('mongoose');
 
 const sendOTP = require('../utility/twilio');
 const verifyOtp = require('../utility/verifyotp');
-
 
 module.exports = {
   getsignup: (req, res)=>{
@@ -47,38 +48,36 @@ module.exports = {
     }
   },
   postVerifyOtp: async (req, res) => {
+    // eslint-disable-next-line no-unused-vars
     const verify = verifyOtp(req.body.mobileNumber, req.body.otp);
-    if (verify) {
-      console.log('otp verified');
-      try {
-        const {fullName, email, mobileNumber, password} = req.body;
-        const newUser = new User({
-          fullname: fullName,
-          email,
-          mobile: mobileNumber,
-          password,
-        });
-        await newUser.save();
-        const token = jwt.sign({id: newUser._id},
-            process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
-        console.log(token);
-        console.log('user added successfully');
-        // Send response after user registration
-        console.log(newUser);
-        return res.status(201).json({
-          status: 'success',
-          token,
-          user: newUser,
-        });
-      } catch (err) {
-        console.log('error adding user', err);
-        // Handle error adding user
-        return res.status(500).json({error: 'Error adding user'});
-      }
-    } else {
-      console.log('failed to verify otp');
-      // Send response for failed OTP verification
-      return res.status(400).json({message: 'Failed to verify OTP'});
+    console.log(req.body.mobileNumber, req.body.otp);
+    if (req.body.otp == null || req.body.otp == '') {
+      res.json({message: 'u are not entered otp'});
+    }
+    try {
+      const {fullName, email, mobileNumber, password} = req.body;
+      const newUser = new User({
+        fullname: fullName,
+        email,
+        mobile: mobileNumber,
+        password,
+      });
+      await newUser.save();
+      const token = jwt.sign({id: newUser._id},
+          process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
+      console.log(token);
+      console.log('user added successfully');
+      // Send response after user registration
+      console.log(newUser);
+      return res.status(201).json({
+        status: 'success',
+        token,
+        user: newUser,
+      });
+    } catch (err) {
+      console.log('error adding user', err);
+      // Handle error adding user
+      return res.status(500).json({error: 'Error verifying otp user'});
     }
   },
 
@@ -100,6 +99,7 @@ module.exports = {
       }
       const token = jwt.sign({id: existinguser._id},
           process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
+      // console.log(token);
       res.status(200).json({message: 'user logged succesfully',
         user: existinguser, token, login: true});
       // console.log('pundachi');
@@ -125,6 +125,34 @@ module.exports = {
       console.log('error getting profile', err);
     }
   },
+
+
+  updateprofile: async (req, res) =>{
+    try {
+      console.log(req.body);
+      // eslint-disable-next-line max-len
+      const {fullname, email, mobile, about, street, city, state, pincode} = req.body;
+      const tokenid = new Mongoose.Types.ObjectId(req.token.id);
+      const update = await UserUpdates.updateOne({userId: tokenid}, {$set: {
+        fullname,
+        email,
+        mobile,
+        about,
+        street,
+        city,
+        state,
+        pincode,
+        userId: tokenid,
+      }},
+      {upsert: true},
+      );
+      console.log(req.token);
+      res.status(200).json({message: 'updated'});
+    } catch (error) {
+      console.log('error in update', error);
+    }
+  },
+
 
 };
 

@@ -11,7 +11,7 @@ async function SendOtp(phoneNumber) {
         .create({to: `+91${phoneNumber}`, channel: 'sms'});
     return true;
   } catch (error) {
-    console.log(error);
+    console.log('twilio error', error);
   }
 }
 module.exports = SendOtp;
