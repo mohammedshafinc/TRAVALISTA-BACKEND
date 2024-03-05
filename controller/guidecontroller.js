@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 // const multer = require('multer');
 
 const Guide = require('../models/guideregistration');
@@ -54,10 +54,13 @@ module.exports = {
         password,
       });
       await newGuide.save();
+      const token = jwt.sign({id: newGuide._id},
+          process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
       console.log('user added succesfully');
       console.log(newGuide);
       res.status(200).json({
         newGuide,
+        token,
         message: 'user added suucesfully',
       });
     } else {
@@ -81,9 +84,37 @@ module.exports = {
       if (!comparePassword) {
         res.status(401).json({message: 'password not match'});
       }
-      res.status(200).json({message: 'loggeed succesfully'});
+      const token = jwt.sign({id: existGuide._id},
+          process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
+      // eslint-disable-next-line max-len
+      res.status(200).json({message: 'loggeed succesfully', guide: existGuide, token, logged: true});
     } catch (error) {
       console.log('error in guide login', error);
+    }
+  },
+
+  guidedetails: async (req, res)=>{
+    console.log('haaaai');
+    try {
+      console.log('token id in guide', req.token.id);
+      const id = req.token.id;
+      const guide = await Guide.findById(id);
+      // if (!guide) {
+      //   return res.status(404).json({message: 'no user'});
+      // }
+      res.json(guide);
+    } catch (error) {
+      console.log('error in gt profile', error);
+    }
+  },
+
+  guideprofileupdate: async (req, res)=>{
+    console.log('hhhhhhhhhhhhhaiiiiiiiiiiiiiiiiiiiiiiii');
+    try {
+      console.log(req.body);
+      res.status(404).json({message: 'update succesfully'});
+    } catch (error) {
+      console.log('error in update', error);
     }
   },
 };

@@ -99,7 +99,7 @@ module.exports = {
       }
       const token = jwt.sign({id: existinguser._id},
           process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
-      // console.log(token);
+      console.log('token', token);
       res.status(200).json({message: 'user logged succesfully',
         user: existinguser, token, login: true});
       // console.log('pundachi');
@@ -133,6 +133,7 @@ module.exports = {
       // eslint-disable-next-line max-len
       const {fullname, email, mobile, about, street, city, state, pincode} = req.body;
       const tokenid = new Mongoose.Types.ObjectId(req.token.id);
+      // eslint-disable-next-line no-unused-vars
       const update = await UserUpdates.updateOne({userId: tokenid}, {$set: {
         fullname,
         email,
@@ -147,7 +148,7 @@ module.exports = {
       {upsert: true},
       );
       console.log(req.token);
-      res.status(200).json({message: 'updated'});
+      res.status(200).json({message: 'updated succesfully'});
     } catch (error) {
       console.log('error in update', error);
     }
