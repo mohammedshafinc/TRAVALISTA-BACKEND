@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Mongoose = require('mongoose');
 // const multer = require('multer');
 
 const Guide = require('../models/guideregistration');
@@ -61,6 +62,7 @@ module.exports = {
       res.status(200).json({
         newGuide,
         token,
+        type: 'guide',
         message: 'user added suucesfully',
       });
     } else {
@@ -69,7 +71,7 @@ module.exports = {
   },
   postguidelogin: async (req, res) => {
     try {
-      console.log('logged details', req.body);
+      // console.log('logged details', req.body);
       if (!req.body.email || !req.body.password) {
         return res.status(400)
             .json({message: 'Please enter your email and password.'});
@@ -77,17 +79,22 @@ module.exports = {
       const {email, password} = req.body;
       const existGuide = await Guide.findOne({email});
       if (!existGuide) {
-        res.status(404).json({message: 'guide not found '});
+        return res.status(404).json({message: 'guide not found '});
       }
       const comparePassword = await
       bcrypt.compare(password, existGuide.password);
       if (!comparePassword) {
-        res.status(401).json({message: 'password not match'});
+        return res.status(401).json({message: 'password not match'});
       }
       const token = jwt.sign({id: existGuide._id},
           process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
       // eslint-disable-next-line max-len
-      res.status(200).json({message: 'loggeed succesfully', guide: existGuide, token, logged: true});
+      return res.status(200).json({
+        message: 'loggeed succesfully',
+        guide: existGuide,
+        token,
+        type: 'guide',
+        logged: true});
     } catch (error) {
       console.log('error in guide login', error);
     }
@@ -99,9 +106,6 @@ module.exports = {
       console.log('token id in guide', req.token.id);
       const id = req.token.id;
       const guide = await Guide.findById(id);
-      // if (!guide) {
-      //   return res.status(404).json({message: 'no user'});
-      // }
       res.json(guide);
     } catch (error) {
       console.log('error in gt profile', error);
@@ -111,10 +115,46 @@ module.exports = {
   guideprofileupdate: async (req, res)=>{
     console.log('hhhhhhhhhhhhhaiiiiiiiiiiiiiiiiiiiiiiii');
     try {
+      // eslint-disable-next-line max-len
+      const {
+        fullname,
+        email,
+        phonenumber,
+        about,
+        exp,
+        location,
+        street,
+        city,
+        state,
+        pincode,
+      } = req.body;
       console.log(req.body);
-      res.status(404).json({message: 'update succesfully'});
+
+      const tokenid = new Mongoose.Types.ObjectId(req.token.id);
+      console.log('t', tokenid);
+      // eslint-disable-next-line no-unused-vars
+      const update = await Guide.updateOne({_id: tokenid}, {$set: {
+        fullname,
+        email,
+        phonenumber,
+        about,
+        exp,
+        location,
+        street,
+        city,
+        state,
+        pincode,
+      }});
+      if (update) {
+        console.log(update);
+        res.status(200).json({message: 'update succesfully'});
+      }
     } catch (error) {
       console.log('error in update', error);
     }
+  },
+  addpackage: (req, res) =>{
+    console.log(req.body);
+    res.status(200).json({message: 'package added succesfully'});
   },
 };

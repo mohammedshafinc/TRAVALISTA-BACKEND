@@ -72,6 +72,7 @@ module.exports = {
       return res.status(201).json({
         status: 'success',
         token,
+        type: 'user',
         user: newUser,
       });
     } catch (err) {
@@ -101,7 +102,7 @@ module.exports = {
           process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
       console.log('token', token);
       res.status(200).json({message: 'user logged succesfully',
-        user: existinguser, token, login: true});
+        user: existinguser, token, type: 'user', login: true});
       // console.log('pundachi');
       console.log('exist', existinguser);
       // console.log('post login', req.body);
@@ -113,13 +114,11 @@ module.exports = {
   getProfile: async (req, res)=>{
     try {
       console.log('tokenid', req.token.id);
-      const id = req.token.id;
+      const id = new Mongoose.Types.ObjectId(req.token.id);
       console.log('id', id);
       const user = await User.findById(id);
+      console.log(user);
 
-      if (!user) {
-        return res.status(404).json(({message: 'no user'}));
-      }
       res.json(user);
     } catch (err) {
       console.log('error getting profile', err);
@@ -147,7 +146,6 @@ module.exports = {
       }},
       {upsert: true},
       );
-      console.log(req.token);
       res.status(200).json({message: 'updated succesfully'});
     } catch (error) {
       console.log('error in update', error);

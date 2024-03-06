@@ -1,6 +1,6 @@
-const moongoose = require('mongoose');
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const guideSchema = new moongoose.Schema({
+const guideSchema = new mongoose.Schema({
   fullname: {
     type: String,
     required: true,
@@ -8,12 +8,10 @@ const guideSchema = new moongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
   },
   phonenumber: {
     type: Number,
     required: true,
-    unique: true,
 
   },
   exp: {
@@ -36,6 +34,22 @@ const guideSchema = new moongoose.Schema({
     type: String,
     required: true,
   },
+  street: {
+    type: String,
+  },
+  city: {
+    type: String,
+  },
+  state: {
+    type: String,
+  },
+  pinccode: {
+    type: Number,
+  },
+  guideId: {
+    type: mongoose.Types.ObjectId,
+  },
+
 });
 guideSchema.pre('save', async function(next) {
   try {
@@ -48,5 +62,5 @@ guideSchema.pre('save', async function(next) {
   }
 });
 
-const Guide = moongoose.model('guideregister', guideSchema);
+const Guide = mongoose.model('guideregister', guideSchema);
 module.exports = Guide;

@@ -11,6 +11,7 @@ const
     postguidelogin,
     guidedetails,
     guideprofileupdate,
+    addpackage,
   } = require('../controller/guidecontroller.js');
 
 router.post('/guideregister', postGuide);
@@ -18,6 +19,7 @@ router.post('/guideotpverify', upload.single('imgupload'), postOtpVerify);
 router.post('/guidelogin', postguidelogin);
 router.get('/guideprofile', token, guidedetails);
 router.patch('/guideprofileupdate/:userId', token, guideprofileupdate);
+router.post('/guideaddpackages', token, addpackage);
 
 
 module.exports = router;

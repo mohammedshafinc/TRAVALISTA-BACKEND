@@ -3,17 +3,14 @@ require('dotenv').config();
 function token(req, res, next) {
   try {
     const autherisationHeader = req.headers['authorization'];
-    console.log( 'auther', autherisationHeader);
+    // console.log( 'auther', autherisationHeader);
     const token = autherisationHeader.split(' ')[1];
-    console.log(autherisationHeader);
-    // if (!token || token == 'null') {
-    //   console.log('uunnnnnn');
-    //   return res.status(401).json({message: 'unauthorised'});
-    // }
+    // console.log(autherisationHeader);
     // console.log(token);
 
     // eslint-disable-next-line no-unused-vars
     const decode = jwt.verify(token, process.env.SECRET_STR, (err, decode)=>{
+      console.log('err', err);
       if (err) {
         console.log('expired');
         res.json({expiry: 'token expired in err'});
