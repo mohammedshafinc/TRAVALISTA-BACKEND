@@ -10,7 +10,6 @@ function token(req, res, next) {
 
     // eslint-disable-next-line no-unused-vars
     const decode = jwt.verify(token, process.env.SECRET_STR, (err, decode)=>{
-      console.log('err', err);
       if (err) {
         console.log('expired');
         res.json({expiry: 'token expired in err'});

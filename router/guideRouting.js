@@ -18,8 +18,9 @@ router.post('/guideregister', postGuide);
 router.post('/guideotpverify', upload.single('imgupload'), postOtpVerify);
 router.post('/guidelogin', postguidelogin);
 router.get('/guideprofile', token, guidedetails);
-router.patch('/guideprofileupdate/:userId', token, guideprofileupdate);
-router.post('/guideaddpackages', token, addpackage);
+// eslint-disable-next-line max-len
+router.patch('/guideprofileupdate/:userId', token, upload.single('imgupload'), guideprofileupdate);
+router.post('/guideaddpackages', token, upload.single('imgupload'), addpackage);
 
 
 module.exports = router;

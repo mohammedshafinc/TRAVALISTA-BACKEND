@@ -20,7 +20,6 @@ const guideSchema = new mongoose.Schema({
   },
   files: {
     type: String,
-    required: true,
   },
   location: {
     type: String,

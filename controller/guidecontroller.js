@@ -4,6 +4,7 @@ const Mongoose = require('mongoose');
 // const multer = require('multer');
 
 const Guide = require('../models/guideregistration');
+const Packages = require('../models/package');
 const sendmail = require('../utility/nodemailer');
 
 
@@ -113,7 +114,8 @@ module.exports = {
   },
 
   guideprofileupdate: async (req, res)=>{
-    console.log('hhhhhhhhhhhhhaiiiiiiiiiiiiiiiiiiiiiiii');
+    // console.log('ffff', req.file.location);
+    const imgfile = req?.file?.location;
     try {
       // eslint-disable-next-line max-len
       const {
@@ -140,6 +142,7 @@ module.exports = {
         about,
         exp,
         location,
+        files: imgfile,
         street,
         city,
         state,
@@ -153,8 +156,34 @@ module.exports = {
       console.log('error in update', error);
     }
   },
-  addpackage: (req, res) =>{
+  addpackage: async (req, res) =>{
+    // const amount = Number(req.body.amount);
     console.log(req.body);
-    res.status(200).json({message: 'package added succesfully'});
+    // console.log('FLKDJSFLDKJF', req.file.location);
+    const packageImg = req.file.location;
+    const tokenid = new Mongoose.Types.ObjectId(req.token.id);
+    console.log('varumoo', tokenid);
+    try {
+      console.log(req.body._id);
+      // eslint-disable-next-line max-len
+      const {packageName, description, amount, food, accomodation, activities, activityCount, duration} = req.body;
+      const newPackage = new Packages({
+        packageName,
+        description,
+        amount,
+        food,
+        files: packageImg,
+        accomodation,
+        activities,
+        activityCount,
+        duration,
+        guideid: tokenid,
+      });
+      await newPackage.save();
+      res.status(200).json({message: 'package added succesfully', newPackage});
+    } catch (error) {
+      console.log('error in adding user', error);
+    }
+    // eslint-disable-next-line max-len, no-unused-vars
   },
 };
