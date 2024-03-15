@@ -20,6 +20,11 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    enum: ['user', 'admin'], // Predefined roles
+    default: 'user', // Default role for new users
+  },
 });
 
 // bycrypt for paswword hashing

@@ -102,9 +102,9 @@ module.exports = {
   },
 
   guidedetails: async (req, res)=>{
-    console.log('haaaai');
+    // console.log('haaaai');
     try {
-      console.log('token id in guide', req.token.id);
+      // console.log('token id in guide', req.token.id);
       const id = req.token.id;
       const guide = await Guide.findById(id);
       res.json(guide);
@@ -185,5 +185,15 @@ module.exports = {
       console.log('error in adding user', error);
     }
     // eslint-disable-next-line max-len, no-unused-vars
+  },
+
+  getpackage: async (req, res)=>{
+    try {
+      const packages = await Packages.find();
+      res.status(200).json({message: 'package get', packages});
+      // console.log(packages);
+    } catch (error) {
+      console.log(error);
+    }
   },
 };

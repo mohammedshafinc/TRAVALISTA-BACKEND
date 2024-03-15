@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable new-cap */
 
 require('dotenv').config();
@@ -61,6 +62,7 @@ module.exports = {
         email,
         mobile: mobileNumber,
         password,
+        role: 'user',
       });
       await newUser.save();
       const token = jwt.sign({id: newUser._id},
@@ -93,19 +95,33 @@ module.exports = {
         return res.status(404).json({message: 'user not found'});
       }
 
+
       const passwordMatch = await bcrypt.compare(
           password, existinguser.password);
-      if (!passwordMatch) {
-        return res.status(401).json({message: 'password not match'});
+      if (!passwordMatch && existinguser.role == 'user') {
+        return res.status(401).json({message: ' user password not match', role: 'user'});
+      } else if (!passwordMatch && existinguser.role == 'admin') {
+        // eslint-disable-next-line max-len
+        return res.status(404).json({message: 'the password of admin not match', role: 'admin'});
+      } else {
+        const token = jwt.sign({id: existinguser._id},
+            process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
+        console.log('token', token);
+        if (existinguser.role == 'user') {
+          console.log('user logged');
+          res.status(200).json({message: 'logged succesfully',
+            user: existinguser, token, type: 'user', login: true});
+          // console.log('pundachi');
+          console.log('exist', existinguser);
+        } else if (existinguser.role =='admin') {
+          console.log('admin logged');
+          res.status(200).json({message: ' admin logged succesfully',
+            admin: existinguser, token, type: 'admin', login: true});
+          // console.log('pundachi');
+          console.log('exist', existinguser);
+        }
+        // console.log('post login', req.body);
       }
-      const token = jwt.sign({id: existinguser._id},
-          process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
-      console.log('token', token);
-      res.status(200).json({message: 'user logged succesfully',
-        user: existinguser, token, type: 'user', login: true});
-      // console.log('pundachi');
-      console.log('exist', existinguser);
-      // console.log('post login', req.body);
     } catch (error) {
       console.log('error in login', error);
     }
