@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 
 const Guide = require('../models/guideregistration');
+const UserUpdate = require('../models/userregistration');
 const sendmail = require('../utility/nodemailer');
 // const Mongoose = require('mongoose');
 module.exports = {
@@ -46,6 +47,16 @@ module.exports = {
     try {
       const guides = await Guide.find();
       res.status(200).json({message: 'list of all guides', guides});
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  getallusers: async (req, res ) =>{
+    try {
+      console.log('hello');
+      const users = await UserUpdate.find();
+      console.log(users);
+      res.status(200).json({message: 'list of all user', users});
     } catch (error) {
       console.log(error);
     }
