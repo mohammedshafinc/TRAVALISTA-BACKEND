@@ -54,17 +54,19 @@ module.exports = {
         location,
         about: about,
         password,
+        isApproved: 'pending',
       });
       await newGuide.save();
       const token = jwt.sign({id: newGuide._id},
           process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
-      console.log('user added succesfully');
+      console.log('guide added succesfully and wait t');
       console.log(newGuide);
+      await sendmail(email, 'verification');
       res.status(200).json({
         newGuide,
         token,
         type: 'guide',
-        message: 'user added suucesfully',
+        message: 'guide added suucesfully wait For admin Approval',
       });
     } else {
       res.status(400).json({message: 'no file uploaded'});
@@ -196,4 +198,5 @@ module.exports = {
       console.log(error);
     }
   },
+
 };

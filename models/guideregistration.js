@@ -48,6 +48,15 @@ const guideSchema = new mongoose.Schema({
   guideId: {
     type: mongoose.Types.ObjectId,
   },
+  submittedAt: {
+    type: Date,
+    default: Date.now,
+  },
+  isApproved: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending',
+  },
 
 });
 guideSchema.pre('save', async function(next) {

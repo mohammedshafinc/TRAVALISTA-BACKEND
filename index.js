@@ -3,7 +3,7 @@ const cors =require('cors');
 const bodyParser = require('body-parser');
 const userRouter = require('./router/userRouting');
 const guideRouter = require('./router/guideRouting');
-const adminRouter = require('./router/guideRouting');
+const adminRouter = require('./router/adminRouter');
 const connectDb = require('./config/config');
 
 
