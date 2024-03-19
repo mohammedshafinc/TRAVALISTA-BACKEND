@@ -107,7 +107,7 @@ module.exports = {
         const token = jwt.sign({id: existinguser._id},
             process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
         console.log('token', token);
-        if (existinguser.role == 'user') {
+        if (existinguser.role == 'user' ) {
           console.log('user logged');
           res.status(200).json({message: 'logged succesfully',
             user: existinguser, token, type: 'user', login: true});

@@ -53,10 +53,42 @@ module.exports = {
   },
   getallusers: async (req, res ) =>{
     try {
-      console.log('hello');
-      const users = await UserUpdate.find();
-      console.log(users);
+      const users = await UserUpdate.find( {role: 'user'});
+      // console.log(users);
       res.status(200).json({message: 'list of all user', users});
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  blockstatus: async (req, res) =>{
+    try {
+      const id = req.params.id;
+      blockStatus = req.body.blockstatus;
+      if ( blockStatus == 'blocked') {
+        const blockupdate = await Guide.findOneAndUpdate({_id: id}, {$set: {
+          blockStatus: 'blocked',
+        }});
+        res.json({message: 'user blocked succesfully', guide: blockupdate});
+      }
+      if (blockStatus == 'unblocked') {
+        const blockupdate = await Guide.findOneAndUpdate({_id: id}, {$set: {
+          blockStatus: 'unblocked',
+        }});
+        res.json({message: 'user unblocked succesfully', guide: blockupdate});
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  getblockedguides: async (req, res) =>{
+    try {
+      const blockedguides = await Guide.find({blockStatus: 'blocked'});
+      if (blockedguides.length === 0) {
+        return res.status(200).json({message: 'no blocked guides available', blockedguides});
+      }
+      return res.status(200).json({message: 'all blocekd guides', blockedguides});
     } catch (error) {
       console.log(error);
     }

@@ -57,6 +57,11 @@ const guideSchema = new mongoose.Schema({
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending',
   },
+  blockStatus: {
+    type: String,
+    enum: ['blocked', 'unblocked'],
+    default: 'unblock',
+  },
 
 });
 guideSchema.pre('save', async function(next) {

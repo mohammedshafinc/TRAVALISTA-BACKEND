@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Mongoose = require('mongoose');
@@ -55,6 +56,7 @@ module.exports = {
         about: about,
         password,
         isApproved: 'pending',
+        blockStatus: 'unblocked',
       });
       await newGuide.save();
       const token = jwt.sign({id: newGuide._id},
@@ -88,6 +90,9 @@ module.exports = {
       bcrypt.compare(password, existGuide.password);
       if (!comparePassword) {
         return res.status(401).json({message: 'password not match'});
+      }
+      if (existGuide.blockStatus == 'blocked') {
+        return res.status(400).json({message: 'you are blocked , please contact admin'});
       }
       const token = jwt.sign({id: existGuide._id},
           process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
