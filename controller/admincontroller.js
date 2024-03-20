@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 
 const Guide = require('../models/guideregistration');
-const UserUpdate = require('../models/userregistration');
+const User = require('../models/userregistration');
 const sendmail = require('../utility/nodemailer');
 // const Mongoose = require('mongoose');
 module.exports = {
@@ -53,8 +53,8 @@ module.exports = {
   },
   getallusers: async (req, res ) =>{
     try {
-      const users = await UserUpdate.find( {role: 'user'});
-      // console.log(users);
+      const users = await User.find( {role: 'user'});
+      console.log(users);
       res.status(200).json({message: 'list of all user', users});
     } catch (error) {
       console.log(error);
@@ -69,13 +69,13 @@ module.exports = {
         const blockupdate = await Guide.findOneAndUpdate({_id: id}, {$set: {
           blockStatus: 'blocked',
         }});
-        res.json({message: 'user blocked succesfully', guide: blockupdate});
+        res.json({message: 'guide blocked succesfully', guide: blockupdate});
       }
       if (blockStatus == 'unblocked') {
         const blockupdate = await Guide.findOneAndUpdate({_id: id}, {$set: {
           blockStatus: 'unblocked',
         }});
-        res.json({message: 'user unblocked succesfully', guide: blockupdate});
+        res.json({message: 'guide unblocked succesfully', guide: blockupdate});
       }
     } catch (error) {
       console.log(error);
@@ -89,6 +89,41 @@ module.exports = {
         return res.status(200).json({message: 'no blocked guides available', blockedguides});
       }
       return res.status(200).json({message: 'all blocekd guides', blockedguides});
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  userblock: async (req, res) => {
+    try {
+      const id = req.params.id;
+      console.log('body', req.body);
+      console.log(id);
+      const blockStatus = req.body.blockstatus;
+      console.log(blockStatus);
+      if ( blockStatus == 'blocked') {
+        const blockupdate = await User.findOneAndUpdate({_id: id}, {$set: {
+          blockStatus: 'blocked',
+        }});
+        console.log(blockupdate);
+        return res.json({message: 'User blocked succesfully', User: blockupdate});
+      }
+      if (blockStatus == 'unblocked') {
+        const blockupdate = await User.findOneAndUpdate({_id: id}, {$set: {
+          blockStatus: 'unblocked',
+        }});
+        return res.json({message: 'User unblocked succesfully', User: blockupdate});
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  getblockedusers: async (req, res) =>{
+    try {
+      const blockeduser = await User.find({blockStatus: 'blocked'});
+      if (blockeduser.length === 0) {
+        return res.status(200).json({message: 'no blocked guides available', blockeduser});
+      }
+      return res.status(200).json({message: 'all blocekd guides', blockeduser});
     } catch (error) {
       console.log(error);
     }

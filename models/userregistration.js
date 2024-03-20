@@ -20,6 +20,26 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  about: {
+    type: String,
+  },
+  street: {
+    type: String,
+  },
+  city: {
+    type: String,
+  },
+  state: {
+    type: String,
+  },
+  pincode: {
+    type: String,
+  },
+  blockStatus: {
+    type: String,
+    enum: ['blocked', 'unblocked'],
+    default: 'unblock',
+  },
   role: {
     type: String,
     enum: ['user', 'admin'], // Predefined roles

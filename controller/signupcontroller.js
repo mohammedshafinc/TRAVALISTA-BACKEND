@@ -3,7 +3,7 @@
 
 require('dotenv').config();
 const User = require('../models/userregistration');
-const UserUpdates = require('../models/userupdate');
+// const UserUpdates = require('../models/userupdate');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Mongoose = require('mongoose');
@@ -62,6 +62,7 @@ module.exports = {
         email,
         mobile: mobileNumber,
         password,
+        blockStatus: 'unblocked',
         role: 'user',
       });
       await newUser.save();
@@ -149,7 +150,7 @@ module.exports = {
       const {fullname, email, mobile, about, street, city, state, pincode} = req.body;
       const tokenid = new Mongoose.Types.ObjectId(req.token.id);
       // eslint-disable-next-line no-unused-vars
-      const update = await UserUpdates.updateOne({userId: tokenid}, {$set: {
+      const update = await User.updateOne({_id: tokenid}, {$set: {
         fullname,
         email,
         mobile,
@@ -158,7 +159,6 @@ module.exports = {
         city,
         state,
         pincode,
-        userId: tokenid,
       }},
       {upsert: true},
       );
