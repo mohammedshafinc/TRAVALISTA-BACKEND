@@ -22,7 +22,7 @@ router.get('/guideprofile', token, guidedetails);
 // eslint-disable-next-line max-len
 router.patch('/guideprofileupdate/:userId', token, upload.single('imgupload'), guideprofileupdate);
 router.post('/guideaddpackages', token, upload.single('imgupload'), addpackage);
-router.get('/getpackages', getpackage);
+router.get('/getpackages/:guideId', getpackage);
 
 
 module.exports = router;

@@ -41,6 +41,9 @@ const guideSchema = new mongoose.Schema({
   guideId: {
     type: mongoose.Types.ObjectId,
   },
+  guideName: {
+    type: String,
+  },
 
 });
 

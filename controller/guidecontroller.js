@@ -101,6 +101,7 @@ module.exports = {
         message: 'loggeed succesfully',
         guide: existGuide,
         token,
+        guideId: existGuide._id,
         type: 'guide',
         logged: true});
     } catch (error) {
@@ -165,15 +166,17 @@ module.exports = {
   },
   addpackage: async (req, res) =>{
     // const amount = Number(req.body.amount);
-    console.log(req.body);
+    // console.log(req.body);
     // console.log('FLKDJSFLDKJF', req.file.location);
     const packageImg = req.file.location;
-    const tokenid = new Mongoose.Types.ObjectId(req.token.id);
-    console.log('varumoo', tokenid);
+    const guideId = req.token.id;
+    console.log('varumoo', guideId);
     try {
-      console.log(req.body._id);
       // eslint-disable-next-line max-len
       const {packageName, description, amount, food, accomodation, activities, activityCount, duration} = req.body;
+      const guide = await Guide.findById(guideId);
+      console.log(guide);
+      const guideName = guide.fullname;
       const newPackage = new Packages({
         packageName,
         description,
@@ -184,10 +187,12 @@ module.exports = {
         activities,
         activityCount,
         duration,
-        guideid: tokenid,
+        guideId: guideId,
+        guideName: guideName,
       });
+      console.log(newPackage.guideName);
       await newPackage.save();
-      res.status(200).json({message: 'package added succesfully', newPackage});
+      res.status(200).json({message: 'package added succesfully', newPackage, guideId, guideName: guideName});
     } catch (error) {
       console.log('error in adding user', error);
     }
@@ -196,9 +201,17 @@ module.exports = {
 
   getpackage: async (req, res)=>{
     try {
-      const packages = await Packages.find();
-      res.status(200).json({message: 'package get', packages});
-      // console.log(packages);
+      console.log(req.params.guideId);
+      const guideId = req.params.guideId;
+      if (guideId && guideId !== 'null') {
+        const packages = await Packages.find({guideId});
+        console.log('ppppp', packages);
+        res.status(200).json({packages});
+      } else {
+        const packages = await Packages.find();
+        console.log(packages);
+        res.status(200).json({packages});
+      }
     } catch (error) {
       console.log(error);
     }
