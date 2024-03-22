@@ -13,6 +13,7 @@ const {
   getblockedguides,
   userblock,
   getblockedusers,
+  showpackages,
 } = require('../controller/admincontroller');
 
 
@@ -21,6 +22,7 @@ router.get('/getguides', getallguides);
 router.get('/getusers', getallusers);
 router.get('/blocekdguides', getblockedguides);
 router.get('/blocekdusers', getblockedusers);
+router.get('/showpackages/:id', showpackages);
 router.patch('/adminresponse/:id', adminresponse);
 router.patch('/blockstatus/:id', blockstatus);
 router.patch('/userblock/:id', userblock);

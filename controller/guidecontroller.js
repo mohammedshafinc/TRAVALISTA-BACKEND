@@ -199,7 +199,7 @@ module.exports = {
     // eslint-disable-next-line max-len, no-unused-vars
   },
 
-  getpackage: async (req, res)=>{
+  getpackages: async (req, res)=>{
     try {
       console.log(req.params.guideId);
       const guideId = req.params.guideId;

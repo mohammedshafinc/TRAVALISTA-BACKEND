@@ -12,7 +12,7 @@ const
     guidedetails,
     guideprofileupdate,
     addpackage,
-    getpackage,
+    getpackages,
   } = require('../controller/guidecontroller.js');
 
 router.post('/guideregister', postGuide);
@@ -22,7 +22,7 @@ router.get('/guideprofile', token, guidedetails);
 // eslint-disable-next-line max-len
 router.patch('/guideprofileupdate/:userId', token, upload.single('imgupload'), guideprofileupdate);
 router.post('/guideaddpackages', token, upload.single('imgupload'), addpackage);
-router.get('/getpackages/:guideId', getpackage);
+router.get('/getpackages/:guideId', getpackages);
 
 
 module.exports = router;

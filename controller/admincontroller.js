@@ -2,8 +2,8 @@
 
 const Guide = require('../models/guideregistration');
 const User = require('../models/userregistration');
+const Package = require('../models/package');
 const sendmail = require('../utility/nodemailer');
-// const Mongoose = require('mongoose');
 module.exports = {
 
   guiderequest: async (req, res) => {
@@ -126,6 +126,24 @@ module.exports = {
       return res.status(200).json({message: 'all blocekd guides', blockeduser});
     } catch (error) {
       console.log(error);
+    }
+  },
+  showpackages: async (req, res) => {
+    const packageId = req.params.id;
+    try {
+      console.log('lkdkmfldsfldnkf');
+      console.log(packageId);
+      // eslint-disable-next-line new-cap
+      const showPackage = await Package.findOne({_id: packageId});
+      console.log('dfsdfdsf', showPackage);
+      if (!showPackage) {
+        return res.status(404).json({error: 'Package not found'});
+      }
+      // Return the found package
+      return res.json(showPackage);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({error: 'Internal Server Error'});
     }
   },
 };

@@ -23,6 +23,7 @@
         "multer-s3": "^3.0.1",
         "nodemailer": "^6.9.10",
         "nodemon": "^3.0.3",
+        "razorpay": "^2.9.2",
         "twilio": "^4.21.0"
     },
     "devDependencies": {
