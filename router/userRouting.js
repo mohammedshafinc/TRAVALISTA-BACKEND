@@ -11,6 +11,8 @@ const
     postLogin,
     getProfile,
     updateprofile,
+    paymentcreateorder,
+    paymentsuccess,
   } = require('../controller/signupcontroller');
 const validation = require('../middleware/validation/signupvalidation');
 const token = require('../middleware/token/token');
@@ -18,8 +20,9 @@ const token = require('../middleware/token/token');
 
 router.post('/usersignup', validation, postSignup);
 router.post('/verifyotp', postVerifyOtp);
-
 router.post('/userlogin', postLogin);
+router.post('/createorder', token, paymentcreateorder);
+router.post('/paymentsuccess', token, paymentsuccess);
 router.get('/getprofile', token, getProfile);
 router.post('/updateprofile/:userId', token, updateprofile);
 

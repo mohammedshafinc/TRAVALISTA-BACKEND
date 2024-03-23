@@ -7,6 +7,7 @@ const User = require('../models/userregistration');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Mongoose = require('mongoose');
+const razorpay = require('../utility/razorpay');
 
 const sendOTP = require('../utility/twilio');
 const verifyOtp = require('../utility/verifyotp');
@@ -166,6 +167,30 @@ module.exports = {
     } catch (error) {
       console.log('error in update', error);
     }
+  },
+
+  paymentcreateorder: (req, res) =>{
+    try {
+      console.log(req.body);
+      razorpay.orders.create({
+        amount: req.body.amount * 100,
+        currency: 'INR',
+        receipt: 'receipt_' + Math.random().toString(36).substring(2, 15),
+      }).then((order)=>{
+        res.json(order);
+        console.log('order', order);
+      }).catch((error)=>{
+        console.log(error);
+        res.status(500).json({error: 'failed to create order'});
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  paymentsuccess: (req, res) =>{
+    console.log(req.body);
+    console.log(req.token.id);
   },
 
 

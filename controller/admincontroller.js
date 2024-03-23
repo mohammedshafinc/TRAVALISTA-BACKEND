@@ -135,7 +135,7 @@ module.exports = {
       console.log(packageId);
       // eslint-disable-next-line new-cap
       const showPackage = await Package.findOne({_id: packageId});
-      console.log('dfsdfdsf', showPackage);
+      // console.log('dfsdfdsf', showPackage);
       if (!showPackage) {
         return res.status(404).json({error: 'Package not found'});
       }

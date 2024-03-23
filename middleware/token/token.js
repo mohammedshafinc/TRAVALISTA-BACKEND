@@ -12,7 +12,7 @@ function token(req, res, next) {
     const decode = jwt.verify(token, process.env.SECRET_STR, (err, decode)=>{
       if (err) {
         console.log('expired');
-        res.json({expiry: 'token expired in err'});
+        res.json({expiry: 'token expired '});
       } else {
         // console.log('expppp');
         const expirationTime = decode.exp;
