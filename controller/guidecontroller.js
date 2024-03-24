@@ -205,11 +205,11 @@ module.exports = {
       const guideId = req.params.guideId;
       if (guideId && guideId !== 'null') {
         const packages = await Packages.find({guideId});
-        console.log('ppppp', packages);
+        // console.log('ppppp', packages);
         res.status(200).json({packages});
       } else {
         const packages = await Packages.find();
-        console.log(packages);
+        // console.log(packages);
         res.status(200).json({packages});
       }
     } catch (error) {

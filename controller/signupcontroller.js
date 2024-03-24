@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable max-len */
 /* eslint-disable new-cap */
 
@@ -8,6 +9,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Mongoose = require('mongoose');
 const razorpay = require('../utility/razorpay');
+const Payment = require('../models/packagebooking');
 
 const sendOTP = require('../utility/twilio');
 const verifyOtp = require('../utility/verifyotp');
@@ -114,13 +116,13 @@ module.exports = {
           res.status(200).json({message: 'logged succesfully',
             user: existinguser, token, type: 'user', login: true});
           // console.log('pundachi');
-          console.log('exist', existinguser);
+          // console.log('exist', existinguser);
         } else if (existinguser.role =='admin') {
           console.log('admin logged');
           res.status(200).json({message: ' admin logged succesfully',
             admin: existinguser, token, type: 'admin', login: true});
           // console.log('pundachi');
-          console.log('exist', existinguser);
+          // console.log('exist', existinguser);
         }
         // console.log('post login', req.body);
       }
@@ -131,11 +133,11 @@ module.exports = {
 
   getProfile: async (req, res)=>{
     try {
-      console.log('tokenid', req.token.id);
+      // console.log('tokenid', req.token.id);
       const id = new Mongoose.Types.ObjectId(req.token.id);
       console.log('id', id);
       const user = await User.findById(id);
-      console.log(user);
+      // console.log(user);
 
       res.json(user);
     } catch (err) {
@@ -146,7 +148,7 @@ module.exports = {
 
   updateprofile: async (req, res) =>{
     try {
-      console.log(req.body);
+      // console.log(req.body);
       // eslint-disable-next-line max-len
       const {fullname, email, mobile, about, street, city, state, pincode} = req.body;
       const tokenid = new Mongoose.Types.ObjectId(req.token.id);
@@ -171,7 +173,7 @@ module.exports = {
 
   paymentcreateorder: (req, res) =>{
     try {
-      console.log(req.body);
+      // console.log(req.body);
       razorpay.orders.create({
         amount: req.body.amount * 100,
         currency: 'INR',
@@ -188,9 +190,31 @@ module.exports = {
     }
   },
 
-  paymentsuccess: (req, res) =>{
+  paymentsuccess: async (req, res) =>{
     console.log(req.body);
     console.log(req.token.id);
+    const userId = req.token.id;
+    const razorpay_payment_id = req.body.razorpay_payment_id;
+    const razorpay_order_id = req.body. razorpay_order_id;
+    const razorpay_signature = req.body.razorpay_signature;
+
+    const user = await User.findOne({_id: userId});
+    console.log('user', user);
+    const username = user.fullname;
+    const email = user.email;
+    console.log(username, 'haaai,', email);
+
+    const booking = new Payment({
+      razorpay_payment_id,
+      razorpay_order_id,
+      razorpay_signature,
+      userid: userId,
+      purchaseduser: username,
+      purchaseuseremail: email,
+    });
+    await booking.save();
+    console.log('bboking', booking);
+    res.status(200).json({message: 'pachage added to database', booking});
   },
 
 

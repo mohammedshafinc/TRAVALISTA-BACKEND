@@ -54,7 +54,7 @@ module.exports = {
   getallusers: async (req, res ) =>{
     try {
       const users = await User.find( {role: 'user'});
-      console.log(users);
+      // console.log(users);
       res.status(200).json({message: 'list of all user', users});
     } catch (error) {
       console.log(error);
