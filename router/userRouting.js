@@ -13,6 +13,7 @@ const
     updateprofile,
     paymentcreateorder,
     paymentsuccess,
+    getbookedpackages,
   } = require('../controller/signupcontroller');
 const validation = require('../middleware/validation/signupvalidation');
 const token = require('../middleware/token/token');
@@ -24,6 +25,7 @@ router.post('/userlogin', postLogin);
 router.post('/createorder', token, paymentcreateorder);
 router.post('/paymentsuccess', token, paymentsuccess);
 router.get('/getprofile', token, getProfile);
+router.get('/bookedpackages', token, getbookedpackages);
 router.post('/updateprofile/:userId', token, updateprofile);
 
 

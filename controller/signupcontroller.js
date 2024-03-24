@@ -191,32 +191,49 @@ module.exports = {
   },
 
   paymentsuccess: async (req, res) =>{
-    console.log(req.body);
-    console.log(req.token.id);
-    const userId = req.token.id;
-    const razorpay_payment_id = req.body.razorpay_payment_id;
-    const razorpay_order_id = req.body. razorpay_order_id;
-    const razorpay_signature = req.body.razorpay_signature;
+    try {
+      console.log(req.body);
+      console.log(req.token.id);
+      const userId = req.token.id;
+      const {data: {razorpay_payment_id, razorpay_order_id, razorpay_signature}, packageId} = req.body;
 
-    const user = await User.findOne({_id: userId});
-    console.log('user', user);
-    const username = user.fullname;
-    const email = user.email;
-    console.log(username, 'haaai,', email);
+      console.log('Razorpay details received:', razorpay_payment_id, razorpay_order_id, razorpay_signature);
 
-    const booking = new Payment({
-      razorpay_payment_id,
-      razorpay_order_id,
-      razorpay_signature,
-      userid: userId,
-      purchaseduser: username,
-      purchaseuseremail: email,
-    });
-    await booking.save();
-    console.log('bboking', booking);
-    res.status(200).json({message: 'pachage added to database', booking});
+
+      const user = await User.findOne({_id: userId});
+      console.log('user', user);
+      const username = user.fullname;
+      const email = user.email;
+      console.log(username, 'haaai,', email);
+
+      const booking = new Payment({
+        razorpay_payment_id: razorpay_payment_id,
+        razorpay_order_id: razorpay_order_id,
+        razorpay_signature: razorpay_signature,
+        userid: userId,
+        purchaseduser: username,
+        purchaseuseremail: email,
+        packageid: packageId,
+      });
+      await booking.save();
+      console.log('bboking', booking);
+      res.status(200).json({message: 'pachage added to database', booking});
+    } catch (error) {
+      console.log(error);
+    }
   },
 
+  getbookedpackages: async (req, res)=>{
+    try {
+      console.log(req.token.id);
+      const userId = req.token.id;
+      const userBooked = await Payment.find({userid: userId}).populate('packageid');
+      console.log(userBooked);
+      res.status(200).json({message: 'packaged fetched succesfully', userBooked});
+    } catch (error) {
+      console.log(error);
+    }
+  },
 
 };
 

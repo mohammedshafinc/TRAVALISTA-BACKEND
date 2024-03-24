@@ -19,6 +19,10 @@ const packageSchema = new Schema({
   purchaseuseremail: {
     type: String,
   },
+  packageid: {
+    type: mongoose.Types.ObjectId,
+    ref: 'packages',
+  },
 });
 
 const booking = mongoose.model('packagebookigs', packageSchema);
