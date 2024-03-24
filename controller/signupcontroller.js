@@ -69,7 +69,7 @@ module.exports = {
         role: 'user',
       });
       await newUser.save();
-      const token = jwt.sign({id: newUser._id},
+      const token = jwt.sign({id: newUser._id, type: 'user'},
           process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
       console.log(token);
       console.log('user added successfully');
@@ -78,7 +78,6 @@ module.exports = {
       return res.status(201).json({
         status: 'success',
         token,
-        type: 'user',
         user: newUser,
       });
     } catch (err) {
@@ -108,20 +107,22 @@ module.exports = {
         // eslint-disable-next-line max-len
         return res.status(404).json({message: 'the password of admin not match', role: 'admin'});
       } else {
-        const token = jwt.sign({id: existinguser._id},
-            process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
-        console.log('token', token);
         if (existinguser.role == 'user' ) {
           console.log('user logged');
+          const token = jwt.sign({id: existinguser._id, type: 'user'},
+              process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
+          console.log('token', token);
           res.status(200).json({message: 'logged succesfully',
-            user: existinguser, token, type: 'user', login: true});
+            user: existinguser, token, user: true});
           // console.log('pundachi');
           // console.log('exist', existinguser);
         } else if (existinguser.role =='admin') {
           console.log('admin logged');
+          const token = jwt.sign({id: existinguser._id, type: 'admin'},
+              process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
+          console.log('token', token);
           res.status(200).json({message: ' admin logged succesfully',
-            admin: existinguser, token, type: 'admin', login: true});
-          // console.log('pundachi');
+            admin: existinguser, token, admin: true});
           // console.log('exist', existinguser);
         }
         // console.log('post login', req.body);

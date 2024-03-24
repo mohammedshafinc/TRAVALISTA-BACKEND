@@ -59,7 +59,7 @@ module.exports = {
         blockStatus: 'unblocked',
       });
       await newGuide.save();
-      const token = jwt.sign({id: newGuide._id},
+      const token = jwt.sign({id: newGuide._id, type: 'guide'},
           process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
       console.log('guide added succesfully and wait t');
       console.log(newGuide);
@@ -67,7 +67,6 @@ module.exports = {
       res.status(200).json({
         newGuide,
         token,
-        type: 'guide',
         message: 'guide added suucesfully wait For admin Approval',
       });
     } else {
@@ -94,16 +93,16 @@ module.exports = {
       if (existGuide.blockStatus == 'blocked') {
         return res.status(400).json({message: 'you are blocked , please contact admin'});
       }
-      const token = jwt.sign({id: existGuide._id},
+      const token = jwt.sign({id: existGuide._id, type: 'guide'},
           process.env.SECRET_STR, {expiresIn: process.env.LOGIN_EXPIRES});
       // eslint-disable-next-line max-len
       return res.status(200).json({
-        message: 'loggeed succesfully',
+        message: ' guide loggeed succesfully',
         guide: existGuide,
         token,
+        guide: true,
         guideId: existGuide._id,
-        type: 'guide',
-        logged: true});
+      });
     } catch (error) {
       console.log('error in guide login', error);
     }
