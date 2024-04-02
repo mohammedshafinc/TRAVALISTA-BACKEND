@@ -14,7 +14,6 @@ try {
       secretAccessKey: process.env.SECRET_ACCESS_KEY,
     },
   });
-
   const upload =
 multer({
   storage: multerS3({

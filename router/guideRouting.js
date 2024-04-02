@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const express = require('express');
 // eslint-disable-next-line new-cap
 const router = express.Router();
@@ -13,16 +14,21 @@ const
     guideprofileupdate,
     addpackage,
     getpackages,
+    getselectedpackage,
+    packageupdate,
   } = require('../controller/guidecontroller.js');
 
 router.post('/guideregister', postGuide);
 router.post('/guideotpverify', upload.single('imgupload'), postOtpVerify);
 router.post('/guidelogin', postguidelogin);
 router.get('/guideprofile', token, guidedetails);
-// eslint-disable-next-line max-len
+router.get('/getpackages/:guideId', token, getpackages);
+router.get('/selectedpackage/:id', token, getselectedpackage);
+
 router.patch('/guideprofileupdate/:userId', token, upload.single('imgupload'), guideprofileupdate);
+router.patch('/guidepackageupdate/:id', token, upload.single('imgupload'), packageupdate);
+
 router.post('/guideaddpackages', token, upload.single('imgupload'), addpackage);
-router.get('/getpackages/:guideId', getpackages);
 
 
 module.exports = router;

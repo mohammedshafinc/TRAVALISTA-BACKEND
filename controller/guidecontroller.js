@@ -216,4 +216,43 @@ module.exports = {
     }
   },
 
+  getselectedpackage: async (req, res) =>{
+    try {
+      // console.log(req.body);
+      console.log(req.params);
+      const packageid = req.params.id;
+
+      const packages = await Packages.findOne({_id: packageid});
+      // console.log(packages);
+      res.status(200).json({packages});
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  packageupdate: async (req, res) =>{
+    try {
+      console.log(req.token.id);
+      console.log('hekllo', req.body);
+      // console.log(req.file);
+      const packageId = req.params.id;
+      const imgfile = req?.file?.location;
+      const {packageName, amount, activities, food, activityCount, duration, accomodation, description} = req.body;
+
+      const packageUpdate = await Packages.updateOne({_id: packageId}, {$set: {
+        packageName,
+        amount,
+        food,
+        activities,
+        activityCount,
+        duration,
+        accomodation,
+        description,
+        files: imgfile,
+      }});
+      console.log(packageUpdate);
+      res.status(200).json({message: 'updatesuccesfully'});
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
