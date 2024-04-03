@@ -250,7 +250,20 @@ module.exports = {
         files: imgfile,
       }});
       console.log(packageUpdate);
-      res.status(200).json({message: 'updatesuccesfully'});
+      res.status(200).json({message: ' package  updated succesfully'});
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  deletepackage: async (req, res) => {
+    try {
+      // console.log(req.params);
+      const packageId = req.params.id;
+      // eslint-disable-next-line no-unused-vars
+      const deletepackage = await Packages.deleteOne({_id: packageId});
+      // console.log(deletepackage);
+      res.status(200).json({message: 'package deleted succesfully'});
     } catch (error) {
       console.log(error);
     }

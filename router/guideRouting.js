@@ -16,6 +16,7 @@ const
     getpackages,
     getselectedpackage,
     packageupdate,
+    deletepackage,
   } = require('../controller/guidecontroller.js');
 
 router.post('/guideregister', postGuide);
@@ -29,6 +30,8 @@ router.patch('/guideprofileupdate/:userId', token, upload.single('imgupload'), g
 router.patch('/guidepackageupdate/:id', token, upload.single('imgupload'), packageupdate);
 
 router.post('/guideaddpackages', token, upload.single('imgupload'), addpackage);
+
+router.delete('/deletepackage/:id', deletepackage);
 
 
 module.exports = router;
