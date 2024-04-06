@@ -7,6 +7,7 @@ const Mongoose = require('mongoose');
 const Guide = require('../models/guideregistration');
 const Packages = require('../models/package');
 const sendmail = require('../utility/nodemailer');
+const User = require('../models/userregistration');
 
 
 module.exports = {
@@ -207,6 +208,7 @@ module.exports = {
         console.log('ppppp', packages);
         res.status(200).json({packages});
       } else {
+        console.log(guideId);
         const packages = await Packages.find();
         console.log('ddd', packages);
         res.status(200).json({packages});
@@ -267,5 +269,25 @@ module.exports = {
     } catch (error) {
       console.log(error);
     }
+  },
+
+  singleguide: async (req, res) => {
+    console.log(req.params);
+    const guideId = req.params.id;
+
+    const guide = await Guide.findOne({_id: guideId});
+    console.log('hiiiii');
+    console.log(guide);
+    res.status(200).json({guide});
+  },
+
+  singleuser: async (req, res) => {
+    console.log(req.params);
+    const userId = req.params.id;
+
+    const guide = await User.findOne({_id: userId});
+    console.log('hiiiii');
+    console.log(guide);
+    res.status(200).json({guide});
   },
 };
