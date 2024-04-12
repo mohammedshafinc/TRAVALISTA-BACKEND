@@ -14,6 +14,7 @@ const
     paymentcreateorder,
     paymentsuccess,
     getbookedpackages,
+    getpreviousmsg,
   } = require('../controller/signupcontroller');
 const validation = require('../middleware/validation/signupvalidation');
 const token = require('../middleware/token/token');
@@ -27,6 +28,7 @@ router.post('/paymentsuccess', token, paymentsuccess);
 router.get('/getprofile', token, getProfile);
 router.get('/bookedpackages', token, getbookedpackages);
 router.post('/updateprofile/:userId', token, updateprofile);
+router.get('/getpreviousmsg/:id', token, getpreviousmsg);
 
 
 module.exports = router;

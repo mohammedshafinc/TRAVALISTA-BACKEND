@@ -272,22 +272,30 @@ module.exports = {
   },
 
   singleguide: async (req, res) => {
-    console.log(req.params);
-    const guideId = req.params.id;
+    try {
+      console.log(req.params);
+      const guideId = req.params.id;
 
-    const guide = await Guide.findOne({_id: guideId});
-    console.log('hiiiii');
-    console.log(guide);
-    res.status(200).json({guide});
+      const guide = await Guide.findOne({_id: guideId});
+      console.log('hiiiii');
+      console.log(guide);
+      res.status(200).json({guide});
+    } catch (error) {
+      console.log(error);
+    }
   },
 
   singleuser: async (req, res) => {
-    console.log(req.params);
-    const userId = req.params.id;
+    try {
+      console.log(req.params);
+      const userId = req.params.id;
 
-    const guide = await User.findOne({_id: userId});
-    console.log('hiiiii');
-    console.log(guide);
-    res.status(200).json({guide});
+      const user = await User.findOne({_id: userId});
+      console.log('hiiiii');
+      // console.log(user);
+      res.status(200).json({user});
+    } catch (error) {
+      console.log(error);
+    }
   },
 };

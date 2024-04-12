@@ -235,6 +235,18 @@ module.exports = {
       console.log(error);
     }
   },
+  getpreviousmsg: async (req, res) => {
+    try {
+      // const userId = new Mongoose.Types.ObjectId
+      if (req.token.type == 'user') {
+        console.log('user', req.token);
+      } else {
+        console.log('guide', req.token);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
 
 };
 
