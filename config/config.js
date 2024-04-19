@@ -5,7 +5,7 @@ function connectDb() {
   }).then(()=>{
     console.log('connected to mongoDb');
   }).catch((error)=>{
-    console.log('error connecting to mongoDb');
+    console.log('error connecting to mongoDb', error);
   });
 }
 module.exports = connectDb;
