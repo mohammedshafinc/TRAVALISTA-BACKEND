@@ -26,6 +26,7 @@ function token(req, res, next) {
       }
     });
   } catch (err) {
+    res.status(500).json({message: 'UnAuthorized'});
     console.log('error in token verify', err);
   }
 }
